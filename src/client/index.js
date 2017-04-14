@@ -10,6 +10,7 @@ import { rehydrateJobs } from 'react-jobs/ssr';
 import configureStore from '../shared/redux/configureStore';
 import ReactHotLoader from './components/ReactHotLoader';
 import DemoApp from '../shared/components/DemoApp';
+import Immutable from 'seamless-immutable'
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
@@ -17,7 +18,8 @@ const container = document.querySelector('#app');
 // Create our Redux store.
 const store = configureStore(
   // Server side rendering would have mounted our state on this global.
-  window.__APP_STATE__, // eslint-disable-line no-underscore-dangle
+  // window.__APP_STATE__, // eslint-disable-line no-underscore-dangle
+  Immutable(window.__APP_STATE__), // eslint-disable-line no-underscore-dangle
 );
 
 function renderApp(TheApp) {

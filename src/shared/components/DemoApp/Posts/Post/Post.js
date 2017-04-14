@@ -13,11 +13,19 @@ type Props = {
   post: ?PostType,
 };
 
-function Post({ post } : Props) {
+function Post(props: Props) {
+  const post = props.post;
   if (!post) {
     // Post hasn't been fetched yet. It would be better if we had a "status"
     // reducer attached to our posts which gave us a bit more insight, such
     // as whether the post is currently being fetched, or if the fetch failed.
+    if(props.job.error){
+      return <h1>Error...</h1>
+    }
+    if(props.job.inProgress){
+      return <h1>Loading...</h1>
+    }
+
     return null;
   }
 
@@ -40,7 +48,8 @@ function Post({ post } : Props) {
 
 function mapStateToProps(state, { params: { id } }) {
   return {
-    post: FromState.getPostById(state, id),
+    // post: FromState.getPostById(state, id),
+    post: state.posts.byId[id]
   };
 }
 
@@ -80,5 +89,7 @@ export default compose(
       shouldWorkAgain: (prevProps, nextProps) =>
         prevProps.params.id !== nextProps.params.id,
     },
+    //TODO: not working
+    // {LoadingComponent: (props) => <div>Loadingggggggg...</div>}
   ),
 )(Post);

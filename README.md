@@ -1,14 +1,8 @@
-### Feature Branch
-
-Note: This is a feature branch of `react-universally`. Please see the [`FEATURE_REDUX_OPINIONATED.md`](/docs/FEATURE_REDUX_OPINIONATED.md) for more information on this branch.
-
----
-
-### Feature Branch
-
-Note: This is a feature branch of `react-universally`. Please see the [`FEATURE_POSTCSS_SASS.md`](/docs/FEATURE_POSTCSS_SASS.md) doc for more information on this branch.
-
----
++ Redux / reactJobs / flow from a feature branch
++ postcss from a feature branch
++ fsa actions
++ seamless-immutable
++ redux-logger for dev
 
 <p align='center'>
   <h1 align='center'>React, Universally</h1>

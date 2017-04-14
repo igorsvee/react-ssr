@@ -2,20 +2,29 @@
 
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
+// import thunk from 'redux-thunk-fsa';
 import axios from 'axios';
 import reducer from '../reducers';
 import type { State } from '../reducers';
-
+import { createLogger } from 'redux-logger'
 function configureStore(initialState: ?State) {
   const enhancers = compose(
     // Middleware store enhancer.
     applyMiddleware(
+
+      process.env.NODE_ENV === 'development' ?
+        createLogger({})
+        // Else we return a no-op function.
+        : f => f,
       // Initialising redux-thunk with extra arguments will pass the below
       // arguments to all the redux-thunk actions. Below we are passing a
       // preconfigured axios instance which can be used to fetch data with.
       // @see https://github.com/gaearon/redux-thunk
       thunk.withExtraArgument({ axios }),
+      // thunk.withExtraArgument({ extraArgument: 'qqq'})
     ),
+
+
     // Redux Dev Tools store enhancer.
     // @see https://github.com/zalmoxisus/redux-devtools-extension
     // We only want this enhancer enabled for development and when in a browser
