@@ -72,6 +72,43 @@ export default function generateHTML(args: Args) {
        ${body}
      </script>`;
 
+  const serviceWorkerInclusionCode = `
+    function printState(state) {
+    document.getElementById('state').innerHTML = state;
+    }
+  
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register(
+        'sw.js',
+        {scope: './'}
+    ).then(function (registration) {
+      var serviceWorker;
+      document.getElementById('status').innerHTML = 'successful';
+      if (registration.installing) {
+        serviceWorker = registration.installing;
+        printState('installing');
+      } else if (registration.waiting) {
+        serviceWorker = registration.waiting;
+        printState('waiting');
+      } else if (registration.active) {
+        serviceWorker = registration.active;
+        printState('active');
+      }
+      if (serviceWorker) {
+        printState(serviceWorker.state);
+        serviceWorker.addEventListener('statechange',
+            function (e) {
+              printState(e.target.state);
+            });
+      }
+
+    }).catch(function (error) {
+      document.getElementById('status').innerHTML = error;
+    });
+  } else {
+    document.getElementById('status').innerHTML =
+        'unavailable';
+  }`;
   return `<!DOCTYPE html>
     <html ${helmet ? helmet.htmlAttributes.toString() : ''}>
       <head>
@@ -82,6 +119,8 @@ export default function generateHTML(args: Args) {
         ${helmet ? helmet.style.toString() : ''}
       </head>
       <body>
+       <div id='status'></div>
+        <p>State: <span id='state'></span></p>
         <div id='app'>${reactAppString || ''}</div>
         ${
           // Binds the client configuration object to the window object so
@@ -108,6 +147,9 @@ export default function generateHTML(args: Args) {
             ? inlineScript(`window.${jobsState.STATE_IDENTIFIER}=${serialize(jobsState.state)};`)
             : ''
         }
+        ${
+        inlineScript(serviceWorkerInclusionCode)
+         }
         ${
           // Enable the polyfill io script?
           // This can't be configured within a react-helmet component as we

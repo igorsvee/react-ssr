@@ -237,6 +237,11 @@ const config = {
           'react-dom',
           'react-helmet',
           'react-router',
+          'redux',
+          'redux-thunk',
+          'redux-actions',
+          'seamless-immutable',
+
         ],
 
         // The name of the vendor DLL.

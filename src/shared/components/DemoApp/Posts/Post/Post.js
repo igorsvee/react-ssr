@@ -1,13 +1,13 @@
 /* @flow */
 
 import React from 'react';
-import { compose } from 'redux';
-import { connect } from 'react-redux';
-import { withJob } from 'react-jobs/ssr';
+import {compose} from 'redux';
+import {connect} from 'react-redux';
+import {withJob} from 'react-jobs/ssr';
 import Helmet from 'react-helmet';
 import * as PostActions from '../../../../actions/posts';
 import * as FromState from '../../../../reducers';
-import type { Post as PostType } from '../../../../types/model';
+import type {Post as PostType} from '../../../../types/model';
 
 type Props = {
   post: ?PostType,
@@ -29,11 +29,11 @@ function Post(props: Props) {
     return null;
   }
 
-  const { title, body } = post;
+  const {title, body} = post;
 
   return (
     <div>
-      <Helmet title={`Posts - ${title}`} />
+      <Helmet title={`Posts - ${title}`}/>
 
       <h1>{title}</h1>
       <div>
@@ -46,7 +46,7 @@ function Post(props: Props) {
   );
 }
 
-function mapStateToProps(state, { params: { id } }) {
+function mapStateToProps(state, {params: {id}}) {
   return {
     // post: FromState.getPostById(state, id),
     post: state.posts.byId[id]
@@ -75,7 +75,7 @@ const mapActionsToProps = {
 export default compose(
   connect(mapStateToProps, mapActionsToProps),
   withJob(
-    ({ params: { id }, post, fetchPost }) => {
+    ({params: {id}, post, fetchPost}) => {
       if (post) {
         // We already have a post, just return true.
         return true;
@@ -87,9 +87,10 @@ export default compose(
     {
       // Any time the post id changes we need to trigger the work.
       shouldWorkAgain: (prevProps, nextProps) =>
-        prevProps.params.id !== nextProps.params.id,
+      prevProps.params.id !== nextProps.params.id,
     },
     //TODO: not working
-    // {LoadingComponent: (props) => <div>Loadingggggggg...</div>}
+    // {LoadingComponent: (props) => <div>Loadingggggggg...</div>},
+    // {ErrorComponent: (props) => <div>ErrorComponent...</div>},
   ),
 )(Post);

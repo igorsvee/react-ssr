@@ -45,25 +45,35 @@ import Immutable from 'seamless-immutable'
 const initialState = Immutable({
     all: [],
     byId: {},
+    fetching:{
+      isFetching: false,
+      error: null
+    }
 });
 
 // -----------------------------------------------------------------------------
 // REDUCER EXPORT
 
 export default handleActions({
-  FETCHING_POST : (state, action) =>{
-       return state;
-  } ,
+  FETCHING_START : (state, action) =>{
+       return state.setIn(['fetching','isFetching'],true).setIn(['fetching','error'],null);
+  },
 
-  FETCHED_POST : (state, action) =>{
+  FETCH_ERROR : (state, action) =>{
+    const errorMsg = action.payload;
+    return state.setIn(['fetching','isFetching'],false).setIn(['fetching','error'],errorMsg);
+  },
+
+  FETCH_SUCCESS : (state, action) =>{
       const post = action.payload;
-      console.warn(state.all instanceof Immutable)
+
       if(state.all.find(x => post.id === x)){
+        //  already present
         return state;
       }else{
         const updatedArray = state.all.asMutable();
         updatedArray.push(post.id);
-        return state.set('all',updatedArray).setIn(['byId',post.id],post)
+        return state.set('all',updatedArray).setIn(['byId',post.id],post).setIn(['fetching','isFetching'],false).setIn(['fetching','error'],null)
       }
   } ,
 
