@@ -1,7 +1,8 @@
 /* @flow */
 
 import React from 'react';
-import { Match, Miss } from 'react-router';
+// import { Match, Miss } from 'react-router';
+import { Route, Switch } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import { CodeSplit } from 'code-split-component';
 import 'normalize.css/normalize.css';
@@ -28,35 +29,39 @@ function DemoApp() {
 
       <Header />
 
-      <Match
-        exactly
-        pattern="/"
-        render={routerProps =>
-          <CodeSplit chunkName="home" modules={{ Home: require('./Home') }}>
-            { ({ Home }) => Home && <Home {...routerProps} /> }
-          </CodeSplit>
-        }
-      />
+      <Switch>
+        <Route
+          exact
+          path="/"
+          render={routerProps =>
+            <CodeSplit chunkName="home" modules={{ Home: require('./Home') }}>
+              { ({ Home }) => Home && <Home {...routerProps} /> }
+            </CodeSplit>
+          }
+        />
 
-      <Match
-        pattern="/posts"
-        render={routerProps =>
-          <CodeSplit chunkName="posts" modules={{ Posts: require('./Posts') }}>
-            { ({ Posts }) => Posts && <Posts {...routerProps} /> }
-          </CodeSplit>
-        }
-      />
+        <Route
+          path="/posts"
+          render={routerProps =>
+            <CodeSplit chunkName="posts" modules={{ Posts: require('./Posts') }}>
+              { ({ Posts }) => Posts && <Posts {...routerProps} /> }
+            </CodeSplit>
+          }
+        />
 
-      <Match
-        pattern="/about"
-        render={routerProps =>
-          <CodeSplit chunkName="about" modules={{ About: require('./About') }}>
-            { ({ About }) => About && <About {...routerProps} /> }
-          </CodeSplit>
-        }
-      />
+        <Route
+          path="/about"
+          render={routerProps =>
+            <CodeSplit chunkName="about" modules={{ About: require('./About') }}>
+              { ({ About }) => About && <About {...routerProps} /> }
+            </CodeSplit>
+          }
+        />
 
-      <Miss component={Error404} />
+        <Route component={Error404} />
+      </Switch>
+
+
     </div>
   );
 }

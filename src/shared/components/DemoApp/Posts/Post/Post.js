@@ -46,7 +46,10 @@ function Post(props: Props) {
   );
 }
 
-function mapStateToProps(state, {params: {id}}) {
+// function mapStateToProps(state, {params: {id}}) {
+function mapStateToProps(state, props) {
+  // console.warn(props)
+  const id = props.match.params.id;
   return {
     // post: FromState.getPostById(state, id),
     post: state.posts.byId[id]
@@ -75,7 +78,10 @@ const mapActionsToProps = {
 export default compose(
   connect(mapStateToProps, mapActionsToProps),
   withJob(
-    ({params: {id}, post, fetchPost}) => {
+    (props) => {
+      const {fetchPost,post,match} = props;
+      const id = match.params.id;
+      // console.warn(props)
       if (post) {
         // We already have a post, just return true.
         return true;
@@ -87,9 +93,9 @@ export default compose(
     {
       // Any time the post id changes we need to trigger the work.
       shouldWorkAgain: (prevProps, nextProps) =>
-      prevProps.params.id !== nextProps.params.id,
+      prevProps.match.params.id !== nextProps.match.params.id,
     },
-    //TODO: not working
+    //TODO: not working,to solve -> update package!!!
     // {LoadingComponent: (props) => <div>Loadingggggggg...</div>},
     // {ErrorComponent: (props) => <div>ErrorComponent...</div>},
   ),

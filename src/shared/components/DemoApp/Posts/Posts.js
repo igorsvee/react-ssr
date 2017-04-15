@@ -1,7 +1,7 @@
 /* @flow */
 
 import React from 'react';
-import { Link, Match } from 'react-router';
+import { Route,Link } from 'react-router-dom';
 import Helmet from 'react-helmet';
 import Post from './Post';
 
@@ -17,7 +17,10 @@ function Posts() {
         <li><Link to="/posts/2">Post 2</Link></li>
       </ul>
 
-      <Match pattern="/posts/:id" component={Post} />
+      {/*<Match pattern="/posts/:id" component={Post} />*/}
+
+      <Route path="/posts/:id" component={Post}/>
+
     </div>
   );
 }

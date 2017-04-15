@@ -119,7 +119,7 @@ const config = {
   // and it is served by the "server" bundle.
   serviceWorker: {
     // Enabled?
-    enabled: true,
+    enabled: false,
     // Service worker name
     fileName: 'sw.js',
     // Paths to the public assets which should be included within our
@@ -236,7 +236,7 @@ const config = {
           'react',
           'react-dom',
           'react-helmet',
-          'react-router',
+          'react-router-dom',
           'redux',
           'redux-thunk',
           'redux-actions',
