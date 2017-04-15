@@ -1,5 +1,7 @@
-+ Redux / reactJobs / flow from a feature branch
-+ postcss from a feature branch
+#Also:
++ Redux / react-jobs / flow from the feature branch
++ postcss from the feature branch
++ latest react-jobs (needs react-tree-walker)
 + fsa actions
 + seamless-immutable
 + redux-logger for dev

@@ -3,6 +3,7 @@
 import React from 'react';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
+// import {withJob} from 'react-jobs/ssr';
 import {withJob} from 'react-jobs/ssr';
 import Helmet from 'react-helmet';
 import * as PostActions from '../../../../actions/posts';
@@ -19,12 +20,12 @@ function Post(props: Props) {
     // Post hasn't been fetched yet. It would be better if we had a "status"
     // reducer attached to our posts which gave us a bit more insight, such
     // as whether the post is currently being fetched, or if the fetch failed.
-    if(props.job.error){
-      return <h1>Error...</h1>
-    }
-    if(props.job.inProgress){
-      return <h1>Loading...</h1>
-    }
+    // if(props.job.error){
+    //   return <h1>Error...</h1>
+    // }
+    // if(props.job.inProgress){
+    //   return <h1>Loading...</h1>
+    // }
 
     return null;
   }
@@ -77,8 +78,8 @@ const mapActionsToProps = {
 // return it which would then result in a synchronous execution of our component.
 export default compose(
   connect(mapStateToProps, mapActionsToProps),
-  withJob(
-    (props) => {
+  withJob({
+    work: function(props)  {
       const {fetchPost,post,match} = props;
       const id = match.params.id;
       // console.warn(props)
@@ -90,13 +91,9 @@ export default compose(
       // fetches the post.
       return fetchPost(id);
     },
-    {
-      // Any time the post id changes we need to trigger the work.
-      shouldWorkAgain: (prevProps, nextProps) =>
-      prevProps.match.params.id !== nextProps.match.params.id,
-    },
-    //TODO: not working,to solve -> update package!!!
-    // {LoadingComponent: (props) => <div>Loadingggggggg...</div>},
-    // {ErrorComponent: (props) => <div>ErrorComponent...</div>},
-  ),
+    shouldWorkAgain: (prevProps, nextProps) =>
+    prevProps.match.params.id !== nextProps.match.params.id,
+    LoadingComponent: (props) => <div>In withJob Loading...</div>, // Optional
+    ErrorComponent: ({ error }) => <div>In withJob error: {error.message}</div>, // Optional
+  })
 )(Post);
