@@ -119,7 +119,9 @@ const config = {
   // and it is served by the "server" bundle.
   serviceWorker: {
     // Enabled?
+    //  choose one
     enabled: false,
+    enabledInline: true,
     // Service worker name
     fileName: 'sw.js',
     // Paths to the public assets which should be included within our

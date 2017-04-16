@@ -14,7 +14,7 @@ import serialize from 'serialize-javascript';
 import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
 import config, { clientConfig } from '../../../../config';
-
+import { safeConfigGet } from '../../../shared/utils/config';
 function styleTags(styles : Array<string>) {
   return styles
     .map(style =>
@@ -120,7 +120,7 @@ export default function generateHTML(args: Args) {
       </head>
       <body>
        <div id='status'></div>
-        <p>State: <span id='state'></span></p>
+        <div id='state'></div>
         <div id='app'>${reactAppString || ''}</div>
         ${
           // Binds the client configuration object to the window object so
@@ -148,7 +148,9 @@ export default function generateHTML(args: Args) {
             : ''
         }
         ${
-        inlineScript(serviceWorkerInclusionCode)
+         safeConfigGet(['serviceWorker', 'enabledInline'])
+         ? inlineScript(serviceWorkerInclusionCode)
+          : ''
          }
         ${
           // Enable the polyfill io script?

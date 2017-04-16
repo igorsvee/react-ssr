@@ -609,7 +609,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
             ifProdClient(() => ({
               loader: ExtractTextPlugin.extract({
                 fallbackLoader: 'style-loader',
-                loader: 'css-loader?sourceMap&importLoaders=2&localIdentName=[local]---[hash:base64:5]!postcss-loader!sass-loader?outputStyle=expanded&sourceMap&sourceMapContents',
+                loader: 'css-loader?sourceMap&modules&importLoaders=2&localIdentName=[local]---[hash:base64:5]!postcss-loader!sass-loader?outputStyle=expanded&sourceMap&sourceMapContents',
               }),
             })),
             // When targetting the server we use the "/locals" version of the
