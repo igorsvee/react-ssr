@@ -1,8 +1,8 @@
 /* @flow */
 
 import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
-// import thunk from 'redux-thunk-fsa';
+// import thunk from 'redux-thunk';
+import thunk from 'redux-thunk-fsa';
 import axios from 'axios';
 import reducer from '../reducers';
 import type { State } from '../reducers';
@@ -20,8 +20,8 @@ function configureStore(initialState: ?State) {
       // arguments to all the redux-thunk actions. Below we are passing a
       // preconfigured axios instance which can be used to fetch data with.
       // @see https://github.com/gaearon/redux-thunk
-      thunk.withExtraArgument({ axios }),
-      // thunk.withExtraArgument({ extraArgument: 'qqq'})
+      // thunk.withExtraArgument({ axios }),
+      thunk.withExtraArgument({ extraArgument: {axios}})
     ),
 
 

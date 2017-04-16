@@ -46,9 +46,7 @@ function fetchWithError() {
 // import axios from 'axios';
 export function fetch(id: number) {
   return (dispatch, getState, opts) => {
-    // console.warn(opts)
     const axios = opts.axios;
-    // console.warn(axios)
     dispatch(fetchPostsStart(id));
 
     return axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`)

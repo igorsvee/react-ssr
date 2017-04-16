@@ -370,6 +370,10 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
                 // Adding this will give us the path to our components in the
                 // react dev tools.
                 ifDev('transform-react-jsx-source'),
+                // Transforms styleName to className using compile time CSS module resolution.
+                ['react-css-modules',{generateScopedName:'[local]---[hash:base64:5]', "filetypes": {
+                  ".pcss": "postcss"
+                }}],
                 // The following plugin supports the code-split-component
                 // instances, taking care of all the heavy boilerplate that we
                 // would have had to do ourselves to get code splitting w/SSR
@@ -404,9 +408,11 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
           loaders: [
             'style-loader',
             {
+              // to inline css uncommet this
+              // path: 'css-loader?modules&localIdentName=[local]---[hash:base64:5]',
               path: 'css-loader',
               // Include sourcemaps for dev experience++.
-              query: { sourceMap: true },
+              query: { sourceMap: true, modules: true, localIdentName: '[local]---[hash:base64:5]' },
             },
             { path: 'postcss-loader' },
             {
@@ -586,7 +592,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
         // server.
         ifElse(isClient || isServer)(
           merge(
-            { test: /(\.scss|\.css)$/ },
+            { test: /(\.scss|\.css|\.pcss)$/ },
             // For development clients we will defer all our css processing to the
             // happypack plugin named "happypack-devclient-css".
             // See the respective plugin within the plugins section for full
@@ -603,13 +609,13 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
             ifProdClient(() => ({
               loader: ExtractTextPlugin.extract({
                 fallbackLoader: 'style-loader',
-                loader: 'css-loader?sourceMap&importLoaders=2!postcss-loader!sass-loader?outputStyle=expanded&sourceMap&sourceMapContents',
+                loader: 'css-loader?sourceMap&importLoaders=2&localIdentName=[local]---[hash:base64:5]!postcss-loader!sass-loader?outputStyle=expanded&sourceMap&sourceMapContents',
               }),
             })),
             // When targetting the server we use the "/locals" version of the
             // css loader, as we don't need any css files for the server.
             ifNode({
-              loaders: ['css-loader/locals', 'postcss-loader', 'sass-loader'],
+              loaders: ['css-loader/locals?modules&importLoaders=2&localIdentName=[local]---[hash:base64:5]', 'postcss-loader', 'sass-loader'],
             }),
           ),
         ),

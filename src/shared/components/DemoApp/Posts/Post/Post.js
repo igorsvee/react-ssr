@@ -47,7 +47,6 @@ function Post(props: Props) {
   );
 }
 
-// function mapStateToProps(state, {params: {id}}) {
 function mapStateToProps(state, props) {
   // console.warn(props)
   const id = props.match.params.id;
@@ -89,6 +88,7 @@ export default compose(
       }
       // Execute the redux-thunk powered action that returns a Promise and
       // fetches the post.
+      console.warn(fetchPost)
       return fetchPost(id);
     },
     shouldWorkAgain: (prevProps, nextProps) =>

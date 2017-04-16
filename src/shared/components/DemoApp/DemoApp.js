@@ -7,13 +7,17 @@ import Helmet from 'react-helmet';
 import { CodeSplit } from 'code-split-component';
 import 'normalize.css/normalize.css';
 import './globals.scss';
+import css from "./DemoApp.pcss";
 import Error404 from './Error404';
 import Header from './Header';
 import { safeConfigGet } from '../../utils/config';
 
 function DemoApp() {
   return (
-    <div style={{ padding: '10px' }}>
+    <div>
+      <div styleName="css.cont">
+
+      </div>
       {/*
         All of the following will be injected into our page header.
         @see https://github.com/nfl/react-helmet

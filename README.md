@@ -1,5 +1,7 @@
-#Also:
-+ Redux / react-jobs / flow from the feature branch
+# Also includes:
++ React 15.5.4
++ babel-plugin-react-css-modules (react-css-modules)
++ Redux/flow from the feature branch
 + postcss from the feature branch
 + latest react-jobs (needs react-tree-walker)
 + fsa actions
