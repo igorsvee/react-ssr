@@ -4,7 +4,7 @@ import React from 'react';
 import Helmet from 'react-helmet';
 import Contributor from './Contributor';
 
-const contributors = [
+export const contributors = [
   { name: 'Alin Porumb', twitter: 'alinporumb' },
   { name: 'Benjamin Kniffler', twitter: 'bkniffler' },
   { name: 'Carson Perrotti', twitter: 'carsonp' },

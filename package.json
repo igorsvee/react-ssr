@@ -1,6 +1,6 @@
 {
-  "name": "react-universally",
-  "version": "12.0.0",
+  "name": "react-ssr",
+  "version": "1.0.0",
   "description": "A starter kit giving you the minimum requirements for a modern universal react application.",
   "main": "build/server/index.js",
   "engines": {
@@ -15,8 +15,7 @@
     "start": "cross-env NODE_ENV=production node build/server",
     "deploy": "babel-node tools/scripts/deploy",
     "lint": "eslint src",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
+    "testREACTComponents": "mocha --require src/client/tests/babelsetup.js --require src/client/tests/domsetup.js  --full-trace  --recursive src/shared/components",
     "flow": "babel-node tools/scripts/flow",
     "flow:defs": "flow-typed install --overwrite",
     "flow:coverage": "flow-coverage-report -i 'src/**/*.js' -t html -t json -t text"
@@ -53,17 +52,6 @@
     "url": "https://github.com/ctrlplusb/react-universally/issues"
   },
   "homepage": "https://github.com/ctrlplusb/react-universally#readme",
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{js,jsx}"
-    ],
-    "snapshotSerializers": [
-      "<rootDir>/node_modules/enzyme-to-json/serializer"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/(build|tools|node_modules|flow-typed|public)/"
-    ]
-  },
   "dependencies": {
     "app-root-dir": "1.0.2",
     "axios": "0.15.3",
@@ -101,7 +89,6 @@
     "babel-cli": "6.24.1",
     "babel-core": "6.24.1",
     "babel-eslint": "7.1.1",
-    "babel-jest": "18.0.0",
     "babel-loader": "6.3.2",
     "babel-plugin-transform-react-jsx-self": "6.22.0",
     "babel-plugin-transform-react-jsx-source": "6.22.0",
@@ -111,6 +98,7 @@
     "babel-preset-react": "6.24.1",
     "babel-preset-stage-3": "6.24.1",
     "babel-template": "6.24.1",
+    "chai": "^3.5.0",
     "chokidar": "1.6.1",
     "cross-env": "3.1.4",
     "css-loader": "0.26.1",
@@ -130,8 +118,9 @@
     "glob": "7.1.1",
     "happypack": "3.0.2",
     "html-webpack-plugin": "2.28.0",
-    "jest": "18.1.0",
+    "jsdom": "^9.12.0",
     "md5": "2.2.1",
+    "mocha": "^3.2.0",
     "node-notifier": "5.0.2",
     "node-sass": "4.2.0",
     "postcss": "5.2.9",
@@ -148,6 +137,8 @@
     "rimraf": "2.5.4",
     "sass-loader": "4.1.1",
     "semver": "5.3.0",
+    "sinon": "^2.1.0",
+    "sinon-chai": "^2.9.0",
     "source-map-support": "0.4.11",
     "style-loader": "0.13.1",
     "webpack": "2.2.1",

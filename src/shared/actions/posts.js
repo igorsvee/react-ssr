@@ -12,29 +12,10 @@ function fetched(post: Post): Action {
   return {type: 'FETCHED_POST', payload: post};
 }
 
-//todo: are these global ones even needed when there's react-jobs?
 const fetchPostsStart = createAction('FETCHING_START', (id: number) => id);
 const fetchPostsError = createAction('FETCH_ERROR', (error: string) => error);
 
 const fetchPostsSuccess = createAction('FETCH_SUCCESS', (data: Post) => data);
-
-
-// export function fetch(id: number) : ThunkAction {
-//   return (dispatch, getState, { axios }) => {
-//     dispatch(fetching(id));
-//
-//     return axios
-//       .get(`https://jsonplaceholder.typicode.com/posts/${id}`)
-//       .then(({ data }) => dispatch(fetched(data)))
-//       // We use 'react-jobs' to call our actions.  We don't want to return
-//       // the actual action to the 'react-jobs' withJob as it will cause
-//       // the data to be serialized into the react-jobs state by the server.
-//       // As we already have the state in the redux state tree, which is also
-//       // getting serialized by the server we will just return a simple "true"
-//       // here to indicate to react-jobs that all is well.
-//       .then(() => true);
-//   };
-// }
 
 
 function fetchWithError() {
@@ -43,8 +24,7 @@ function fetchWithError() {
   })
 }
 
-// import axios from 'axios';
-export function fetch(id: number) {
+export function fetch(id: number) : ThunkAction  {
   return (dispatch, getState, opts) => {
     const axios = opts.axios;
     dispatch(fetchPostsStart(id));

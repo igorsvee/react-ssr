@@ -1,5 +1,6 @@
 # Also includes:
 + React 15.5.4
++ mocha/chai/sinon instead of jest
 + babel-plugin-react-css-modules (react-css-modules)
 + Redux/flow from the feature branch
 + postcss from the feature branch
