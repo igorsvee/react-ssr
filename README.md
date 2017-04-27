@@ -4,7 +4,7 @@
 + babel-plugin-react-css-modules (react-css-modules)
 + Redux/flow from the feature branch
 + postcss from the feature branch
-+ latest react-jobs (needs react-tree-walker)
++ latest react-jobs (needs react-tree-walker) (https://github.com/heroku/react-refetch/https://github.com/RickWong/react-transmit http://ericclemmons.com/react-resolver/docs/introduction/SimilarProjects.html could be better ?)
 + fsa actions
 + seamless-immutable
 + redux-logger for dev
