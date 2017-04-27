@@ -3,7 +3,7 @@
 
 import React from 'react';
 import {shallow, mount} from "enzyme"
-import About, {contributors} from './About';
+import About, {contributors} from './AboutRoute';
 import Contributor from './Contributor/Contributor';
 import chai from 'chai'
 import sinon from 'sinon'

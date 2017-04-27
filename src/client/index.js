@@ -4,17 +4,18 @@
 import React from 'react';
 import {render} from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
-import {CodeSplitProvider, rehydrateState} from 'code-split-component';
 import {Provider as ReduxProvider} from 'react-redux';
 import {rehydrateJobs} from 'react-jobs/ssr';
 import configureStore from '../shared/redux/configureStore';
 import ReactHotLoader from './components/ReactHotLoader';
 import DemoApp from '../shared/components/DemoApp';
 import Immutable from 'seamless-immutable'
+import asyncBootstrapper from 'react-async-bootstrapper';
+import { AsyncComponentProvider, createAsyncContext } from 'react-async-component';
+import { JobProvider } from 'react-jobs';
 
 // Get the DOM Element that will host our React application.
 const container = document.querySelector('#app');
-
 //  not using this function because it's slower than Immutable()
 function toImmutable(initialState) {
   // Transform into seamless collections,
@@ -30,6 +31,19 @@ function toImmutable(initialState) {
   return state;
 }
 
+// Does the user's browser support the HTML5 history API?
+// If the user's browser doesn't support the HTML5 history API then we
+// will force full page refreshes on each page change.
+const supportsHistory = 'pushState' in window.history;
+
+// Get any rehydrateState for the async components.
+// eslint-disable-next-line no-underscore-dangle
+const asyncComponentsRehydrateState = window.__ASYNC_COMPONENTS_REHYDRATE_STATE__;
+
+// Get any rehydrateState for the jobs.
+// eslint-disable-next-line no-underscore-dangle
+  const jobsRehydrateState = window.__JOBS_REHYDRATE_STATE__;
+
 // Create our Redux store.
 const store = configureStore(
   // Server side rendering would have mounted our state on this global.
@@ -39,32 +53,28 @@ const store = configureStore(
 );
 
 function renderApp(TheApp) {
-  // We use the code-split-component library to provide us with code splitting
-  // within our application.  This library supports server rendered applications,
-  // but for server rendered applications it requires that we rehydrate any
-  // code split modules that may have been rendered for a request.  We use
-  // the provided helper and then pass the result to the CodeSplitProvider
-  // instance which takes care of the rest for us.  This is really important
-  // to do as it will ensure that our React checksum for the client will match
-  // the content returned by the server.
-  // @see https://github.com/ctrlplusb/code-split-component
-  rehydrateState().then((codeSplitState) => {
+
     const app = (
       <ReactHotLoader>
-        <CodeSplitProvider state={codeSplitState}>
+        <AsyncComponentProvider rehydrateState={asyncComponentsRehydrateState}>
+          <JobProvider rehydrateState={jobsRehydrateState}>
           <ReduxProvider store={store}>
-            <BrowserRouter>
+            <BrowserRouter forceRefresh={!supportsHistory}>
               <TheApp />
             </BrowserRouter>
           </ReduxProvider>
-        </CodeSplitProvider>
+          </JobProvider>
+        </AsyncComponentProvider>
       </ReactHotLoader>
     );
 
-    rehydrateJobs(app).then(({appWithJobs}) =>
-      render(appWithJobs, container),
+  //  splitting
+  asyncBootstrapper(app)
+  //  react jobs
+  //   .then((res) =>rehydrateJobs(app))
+    .then(() =>
+      render(app, container),
     );
-  });
 }
 
 // The following is needed so that we can support hot reloading our application.

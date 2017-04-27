@@ -1,8 +1,6 @@
-/* @flow */
-
 import React from 'react';
 import Helmet from 'react-helmet';
-import Contributor from './Contributor';
+import Contributor from './Contributor/Contributor';
 
 export const contributors = [
   { name: 'Alin Porumb', twitter: 'alinporumb' },
@@ -20,13 +18,14 @@ export const contributors = [
   { name: 'Sean Matheson', twitter: 'controlplusb' },
   { name: 'Steven Truesdell', twitter: 'StruesCO' },
 ];
-
-function About() {
+function AboutRoute() {
   return (
     <div style={{ textAlign: 'center' }}>
-      <Helmet title="About" />
+      <Helmet>
+        <title>About</title>
+      </Helmet>
 
-      <p>Produced with ❤️ by...</p>
+      <p>Produced with ❤️</p>
 
       <ul style={{ marginTop: '1rem' }}>
         {
@@ -41,4 +40,4 @@ function About() {
   );
 }
 
-export default About;
+export default AboutRoute;

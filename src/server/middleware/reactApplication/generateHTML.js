@@ -11,7 +11,6 @@
 
 import type { Head } from 'react-helmet';
 import serialize from 'serialize-javascript';
-import { STATE_IDENTIFIER } from 'code-split-component';
 import getAssetsForClientChunks from './getAssetsForClientChunks';
 import config, { clientConfig } from '../../../../config';
 import { safeConfigGet } from '../../../shared/utils/config';
@@ -36,13 +35,12 @@ type Args = {
   initialState?: Object,
   nonce: string,
   helmet?: Head,
-  codeSplitState?: { chunks: Array<string>, modules: Array<string> },
-  jobsState?: { state: Object, STATE_IDENTIFIER: string },
+  asyncComponentsState : Object,
+  jobsState: Object,
 };
 
 export default function generateHTML(args: Args) {
-  const { reactAppString, initialState, nonce, helmet, codeSplitState, jobsState } = args;
-
+  const { reactAppString, initialState, nonce, helmet, asyncComponentsState, jobsState } = args;
   // The chunks that we need to fetch the assets (js/css) for and then include
   // said assets as script/style tags within our html.
   const chunksForRender = [
@@ -51,17 +49,6 @@ export default function generateHTML(args: Args) {
     'index',
   ];
 
-  if (codeSplitState) {
-    // We add all the chunks that our CodeSplitProvider tracked as being used
-    // for this render.  This isn't actually required as the rehydrate function
-    // of code-split-component which gets executed in our client bundle will
-    // ensure all our required chunks are loaded, but its a nice optimisation as
-    // it means the browser can start fetching the required files before it's
-    // even finished parsing our client bundle entry script.
-    // Having the assets.json file available to us made implementing this
-    // feature rather arbitrary.
-    codeSplitState.chunks.forEach(chunk => chunksForRender.push(chunk));
-  }
 
   // Now we get the assets (js/css) for the chunks.
   const assetsForRender = getAssetsForClientChunks(chunksForRender);
@@ -136,15 +123,16 @@ export default function generateHTML(args: Args) {
             : ''
         }
         ${
-          // Bind our code split state so that the client knows which server
-          // rendered modules need to be rehydrated.
-          codeSplitState
-            ? inlineScript(`window.${STATE_IDENTIFIER}=${serialize(codeSplitState)};`)
+    // Bind our async components state so the client knows which ones
+    // to initialise so that the checksum matches the server response.
+    // @see https://github.com/ctrlplusb/react-async-component
+           asyncComponentsState
+            ? inlineScript(`window.__ASYNC_COMPONENTS_REHYDRATE_STATE__=${serialize(asyncComponentsState)};`)
             : ''
         }
         ${
           jobsState
-            ? inlineScript(`window.${jobsState.STATE_IDENTIFIER}=${serialize(jobsState.state)};`)
+            ? inlineScript(`window.__JOBS_REHYDRATE_STATE__=${serialize(jobsState)};`)
             : ''
         }
         ${

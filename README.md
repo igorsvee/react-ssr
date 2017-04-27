@@ -1,13 +1,12 @@
 # Also includes:
 + React 15.5.4
++ react-async-component instead of code-split-component
++ Redux/flow from the feature branch + redux-actions (fsa actions) + redux-logger for dev
 + mocha/chai/sinon instead of jest
-+ babel-plugin-react-css-modules (react-css-modules)
-+ Redux/flow from the feature branch
++ babel-plugin-react-css-modules for css (react-css-modules)
 + postcss from the feature branch
-+ latest react-jobs (needs react-tree-walker) (https://github.com/heroku/react-refetch/https://github.com/RickWong/react-transmit http://ericclemmons.com/react-resolver/docs/introduction/SimilarProjects.html could be better ?)
-+ fsa actions
++ latest react-jobs (incl. react-tree-walker) (https://github.com/heroku/react-refetch/https://github.com/RickWong/react-transmit http://ericclemmons.com/react-resolver/docs/introduction/SimilarProjects.html could be better ?)
 + seamless-immutable
-+ redux-logger for dev
 
 <p align='center'>
   <h1 align='center'>React, Universally</h1>

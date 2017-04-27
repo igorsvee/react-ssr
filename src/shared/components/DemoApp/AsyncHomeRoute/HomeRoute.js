@@ -1,13 +1,16 @@
-/* @flow */
-
 import React from 'react';
 import Helmet from 'react-helmet';
+
+
+
 import { safeConfigGet } from '../../../utils/config';
 
-function Home() {
+function HomeRoute() {
   return (
-    <article>
-      <Helmet title="Home" />
+    <div>
+      <Helmet>
+        <title>Home</title>
+      </Helmet>
 
       <h2>{safeConfigGet(['welcomeMessage'])}</h2>
 
@@ -17,8 +20,8 @@ function Home() {
         minimal project set up allowing you to make your own architecture
         decisions (Redux/Mobx etc).
       </p>
-    </article>
+    </div>
   );
 }
 
-export default Home;
+export default HomeRoute;

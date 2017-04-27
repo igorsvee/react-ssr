@@ -17,7 +17,6 @@ function Posts() {
         <li><Link to="/posts/2">Post 2</Link></li>
       </ul>
 
-      {/*<Match pattern="/posts/:id" component={Post} />*/}
 
       <Route path="/posts/:id" component={Post}/>
 

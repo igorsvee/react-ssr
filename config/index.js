@@ -234,7 +234,7 @@ const config = {
         // webpack loaders in order to be processed (e.g. CSS/SASS etc).
         // For these cases you don't want to include them in the Vendor DLL.
         include: [
-          'code-split-component',
+          // 'code-split-component',
           'react',
           'react-dom',
           'react-helmet',
@@ -243,7 +243,6 @@ const config = {
           'redux-thunk',
           'redux-actions',
           'seamless-immutable',
-
         ],
 
         // The name of the vendor DLL.

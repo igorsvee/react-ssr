@@ -4,7 +4,7 @@ import React from 'react';
 import {compose} from 'redux';
 import {connect} from 'react-redux';
 // import {withJob} from 'react-jobs/ssr';
-import {withJob} from 'react-jobs/ssr';
+import {withJob} from 'react-jobs';
 import Helmet from 'react-helmet';
 import * as PostActions from '../../../../actions/posts';
 import * as FromState from '../../../../reducers';
@@ -88,7 +88,6 @@ export default compose(
       }
       // Execute the redux-thunk powered action that returns a Promise and
       // fetches the post.
-      console.warn(fetchPost)
       return fetchPost(id);
     },
     shouldWorkAgain: (prevProps, nextProps) =>

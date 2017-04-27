@@ -10,7 +10,6 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import appRootDir from 'app-root-dir';
 import WebpackMd5Hash from 'webpack-md5-hash';
-import CodeSplitPlugin from 'code-split-component/webpack';
 import { removeEmpty, ifElse, merge, happyPackPlugin } from '../utils';
 import config, { clientConfig } from '../../config';
 import type { BuildOptions } from '../types';
@@ -199,13 +198,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
     },
 
     plugins: removeEmpty([
-      // Required support for code-split-component, which provides us with our
-      // code splitting functionality.
-      //
-      // The code-split-component doesn't work nicely with React Hot Loader,
-      // which we use in our development builds, so we will disable it (which
-      // causes synchronous loading behaviour for the CodeSplit instances).
-      ifProd(() => new CodeSplitPlugin()),
+
 
       // We use this so that our generated [chunkhash]'s are only different if
       // the content for our respective chunks have changed.  This optimises
@@ -374,26 +367,7 @@ export default function webpackConfigFactory(buildOptions: BuildOptions) {
                 ['react-css-modules',{generateScopedName:'[local]---[hash:base64:5]', "filetypes": {
                   ".pcss": "postcss"
                 }}],
-                // The following plugin supports the code-split-component
-                // instances, taking care of all the heavy boilerplate that we
-                // would have had to do ourselves to get code splitting w/SSR
-                // support working.
-                // @see https://github.com/ctrlplusb/code-split-component
-                //
-                // We only include it in production as this library does not support
-                // React Hot Loader, which we use in development.
-                ifElse(isProd && (isServer || isClient))(
-                  [
-                    'code-split-component/babel',
-                    {
-                      // For our server bundle we will set the mode as being 'server'
-                      // which will ensure that our code split components can be
-                      // resolved synchronously, being much more helpful for
-                      // pre-rendering.
-                      mode: target,
-                    },
-                  ],
-                ),
+
               ].filter(x => x != null),
             },
             buildOptions,

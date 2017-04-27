@@ -6,14 +6,16 @@ import { renderToString } from 'react-dom/server';
 // import { ServerRouter, createServerRenderContext } from 'react-router';
 import { StaticRouter, createServerRenderContext } from 'react-router';
 import { Provider } from 'react-redux';
-import { CodeSplitProvider, createRenderContext } from 'code-split-component';
+
 import Helmet from 'react-helmet';
 import { runJobs } from 'react-jobs/ssr';
 import generateHTML from './generateHTML';
 import DemoApp from '../../../shared/components/DemoApp';
 import configureStore from '../../../shared/redux/configureStore';
 import config from '../../../../config';
-
+import { AsyncComponentProvider, createAsyncContext } from 'react-async-component';
+import asyncBootstrapper from 'react-async-bootstrapper';
+import { JobProvider, createJobContext } from 'react-jobs';
 /**
  * An express middleware that is capabable of service our React application,
  * supporting server side rendering of the application.
@@ -47,37 +49,36 @@ function reactApplicationMiddleware(request: $Request, response: $Response) {
   const store = configureStore();
   const { getState } = store;
 
+  // Create a context for our AsyncComponentProvider.
+  const asyncComponentsContext = createAsyncContext();
+
+  // Create a context for our JobProvider.
+   const jobContext = createJobContext();
+
   // First create a context for <StaticRouter>, which will allow us to
   // query for the results of the render.
   const reactRouterContext = {};
 
-  // We also create a context for our <CodeSplitProvider> which will allow us
-  // to query which chunks/modules were used during the render process.
-  const codeSplitContext = createRenderContext();
 
   // Define our app to be server rendered.
   const app = (
-    <CodeSplitProvider context={codeSplitContext}>
+    <AsyncComponentProvider asyncContext={asyncComponentsContext}>
+      <JobProvider jobContext={jobContext}>
       <StaticRouter location={request.url} context={reactRouterContext}>
         <Provider store={store}>
           <DemoApp />
         </Provider>
       </StaticRouter>
-    </CodeSplitProvider>
+      </JobProvider>
+    </AsyncComponentProvider>
   );
 
+  asyncBootstrapper(app)
   // Firstly we will use the "runJobs" helper to execute all the jobs
   // that have been attached to the components being rendered in our app.
-  runJobs(app).then(({ appWithJobs, state, STATE_IDENTIFIER }) => {
-    // runJobs returns a new version of our app with all the job data accessible
-    // to it.  We will pass this to the renderToString function.  Additionally
-    // we need to pass the returned state to our generateHTML function so
-    // that the browser can rehdrate our application with the appropriate
-    // job data.  This will then avoid react checksum issues and thereby
-    // prevent our app from "double rendering" on the client.
-
+  .then(() => {
     // Create our application and render it into a string.
-    const reactAppString = renderToString(appWithJobs);
+    const reactAppString = renderToString(app);
 
     // Generate the html response.
     const html = generateHTML({
@@ -92,17 +93,16 @@ function reactApplicationMiddleware(request: $Request, response: $Response) {
       // We provide our code split state so that it can be included within the
       // html, and then the client bundle can use this data to know which chunks/
       // modules need to be rehydrated prior to the application being rendered.
-      codeSplitState: codeSplitContext.getState(),
+      asyncComponentsState : asyncComponentsContext.getState(),
+      //  react-jobs state
+      jobsState : jobContext.getState(),
+      // codeSplitState: codeSplitContext.getState(),
       // Provide the redux store state, this will be bound to the window.__APP_STATE__
       // so that we can rehydrate the state on the client.
       initialState: getState(),
       // Pass through the react-jobs provided state so that it can be serialized
       // into the HTML and then the browser can use the data to rehydrate the
       // application appropriately.
-      jobsState: {
-        state,
-        STATE_IDENTIFIER,
-      },
     });
 
     // Get the render result from the server render context.
